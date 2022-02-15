@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld-deployment-2
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0%
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: helloworld-deployment-2
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: helloworld-deployment-2
+    spec:
+      volumes:
+      - name: www-content
+        emptyDir: {}
+      containers:
+        - name: hello-world
+          image: helloworld-webserver:1.0.0
+          volumeMounts:
+          - mountPath: /www
+            name: www-content
+        - name: get-content-sidecar
+          image: get-content:1.0.0
+          volumeMounts:
+          - mountPath: /www
+            name: www-content
+          command:
+          - bash
+          - -c
+          - |
+            git clone https://github.com/psdally/k8s-sidecars.git /www
+            cd /www
+            while true; do
+              git fetch
+              sleep 60
+            done

@@ -1,6 +1,7 @@
 resources:
-- deployment.yaml
-- deployment-with-sidecar.yaml
+- deployment-1.yaml
+- deployment-2.yaml
+- deployment-3.yaml
 
 generatorOptions:
  disableNameSuffixHash: true
